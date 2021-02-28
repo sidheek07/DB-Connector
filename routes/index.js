@@ -22,16 +22,22 @@ router.post("/connect", async (req, res) => {
   try {
     console.log("sql connecting");
     pool = await sql.connect(sqlConfig);
+    console.log(pool);
     const query = await pool
       .request()
       .query("select count(*) as count from tbl_employee"); //
     result = `Found ${query.recordset[0].count} employees on db`;
+    const ipaddrss = await pool
+      .request()
+      .query(
+        "SELECT CONNECTIONPROPERTY('client_net_address') AS client_net_address "
+      );
+    sqlConfig.ipaddress = ipaddrss.recordset[0].client_net_address;
   } catch (e) {
     error = e;
   } finally {
     sql.close();
   }
-  console.log(sqlConfig);
   res.render("index", {
     error,
     result,
