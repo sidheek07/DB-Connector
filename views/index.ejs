@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    RadixHR Database Connector
+  </title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>Welcome to RadixHR Database Connector
+  </h1>
+  <div class="connection">
+    <div class="connection-form">
+      <form method="POST" action="/connect" class="connection-form__item">
+        <h3>Connect your database</h3>
+        <input type="text" placeholder="IP Address Or Server" name="server" value="<%= form.server %>" />
+        <input type="text" placeholder="Database Name" name="database" value="<%= form.database %>" />
+        <input type="text" placeholder="Username" name="user" value="<%= form.user %>" />
+        <input type="text" placeholder="Password" name="password" value="<%= form.password %>" />
+        <button>Connect</button>
+      </form>
+    </div>
+    <% if(error || result) { %>
+      <div class="connection-result">
+        <h3>Result</h3>
+        <% if(error){%>
+          <pre>
+            <code>
+              {
+                status: <strong style="color: red;">Failed</strong>
+                Message: <strong><%= error %></strong>
+              }
+            </code>
+          </pre>
+          <% } %>
+            <% if(result){%>
+              <pre>
+              <code>
+                {
+                  status: <strong style="color: green;">Success</strong>
+                  Message: <strong>Successfully Connected to server <%= form.server %> with databse <%= form.database %></strong>
+                  Result: <span class="wrap"><%= result %></span>
+                }
+              </code>
+            </pre>
+              <% } %>
+      </div>
+      <% } %>
+
+  </div>
+
+</body>
+
+</html>
