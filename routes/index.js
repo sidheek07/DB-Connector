@@ -3,6 +3,9 @@ var express = require("express");
 var router = express.Router();
 var sql = require("mssql");
 const { networkInterfaces } = require("os");
+const publicIp = require("public-ip");
+const ipAddress = require("public-ip");
+
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index", { result: null, error: null, form: {} });
@@ -40,22 +43,23 @@ router.post("/connect", async (req, res) => {
       .request()
       .query("select count(*) as count from tbl_employee");
     result = `Found ${query.recordset[0].count} employees on db`;
-    const ipaddrss = await pool
-      .request()
-      .query(
-        "SELECT CONNECTIONPROPERTY('client_net_address') AS client_net_address "
-      );
-    sqlConfig.sourceIpaddress = ipaddrss.recordset[0].client_net_address;
+
   } catch (e) {
     error = e;
   } finally {
     sql.close();
   }
+
+  const ipadress = await  publicIp.v4();
+  sqlConfig.sourceIpaddress = ipadress;
+
   res.render("index", {
     error,
     result,
     form: sqlConfig,
   });
 });
+
+
 
 module.exports = router;

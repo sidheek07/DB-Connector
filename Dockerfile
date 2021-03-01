@@ -1,9 +1,7 @@
-## The builder
-FROM node:12-alpine as builder
+FROM node:12-alpine
 WORKDIR /usr/src/app
-ENV OPENCOLLECTIVE_HIDE=1
-ENV SUPPRESS_SUPPORT=1
-COPY package.json package-lock.json ./
-RUN npm i --loglevel error
+COPY package*.json ./
+RUN npm install
 COPY . .
-RUN npm run build
+EXPOSE 8080
+CMD [ "node", "bin/www" ]
